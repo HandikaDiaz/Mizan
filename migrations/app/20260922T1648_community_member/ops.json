@@ -1,0 +1,978 @@
+[
+  {
+    "id": "dropCheckConstraint.campaign.campaign_source_check_49f4562b",
+    "label": "Drop check constraint \"campaign_source_check_49f4562b\" on \"campaign\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "campaign_source_check_49f4562b",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaign_source_check_49f4562b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_49f4562b",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"campaign_source_check_49f4562b\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" DROP CONSTRAINT \"campaign_source_check_49f4562b\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaign_source_check_49f4562b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_49f4562b",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.community.community_ownerId_fkey",
+    "label": "Drop constraint \"community_ownerId_fkey\" on \"community\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "community_ownerId_fkey",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"community_ownerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_ownerId_fkey",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"community_ownerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"community\" DROP CONSTRAINT \"community_ownerId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"community_ownerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_ownerId_fkey",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.community.community_ownerId_idx_e2d0c1ef",
+    "label": "Drop index \"community_ownerId_idx_e2d0c1ef\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "community_ownerId_idx_e2d0c1ef",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"community_ownerId_idx_e2d0c1ef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"community_ownerId_idx_e2d0c1ef\"",
+        "sql": "DROP INDEX \"public\".\"community_ownerId_idx_e2d0c1ef\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"community_ownerId_idx_e2d0c1ef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.community.ownerId",
+    "label": "Drop column \"ownerId\" from \"community\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "ownerId",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"ownerId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "ownerId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"ownerId\"",
+        "sql": "ALTER TABLE \"public\".\"community\" DROP COLUMN \"ownerId\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"ownerId\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "ownerId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.communityMember",
+    "label": "Create table \"communityMember\"",
+    "summary": "Creates table \"communityMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"communityMember\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"communityMember\"",
+        "sql": "CREATE TABLE \"public\".\"communityMember\" (\n  \"communityId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"role\" text DEFAULT 'STAFF' NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"communityMember_role_check_1ff37111\" CHECK (\"role\" IN ('OWNER', 'STAFF')),\n  CONSTRAINT \"communityMember_status_check_767350ca\" CHECK (\"status\" IN ('PENDING', 'ACTIVE', 'REJECTED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"communityMember\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.milestone",
+    "label": "Create table \"milestone\"",
+    "summary": "Creates table \"milestone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "milestone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"milestone\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"milestone\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"milestone\"",
+        "sql": "CREATE TABLE \"public\".\"milestone\" (\n  \"aiConfidence\" float8,\n  \"aiVerificationNote\" text,\n  \"amountWei\" text NOT NULL,\n  \"campaignId\" int4 NOT NULL,\n  \"contractMilestoneId\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"disbursementRequestedAt\" timestamptz,\n  \"disbursementTxHash\" text,\n  \"id\" SERIAL NOT NULL,\n  \"order\" int4 NOT NULL,\n  \"proofImageUrl\" text,\n  \"proofNote\" text,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"milestone_status_check_7a06db4d\" CHECK (\"status\" IN ('PENDING', 'PROOF_SUBMITTED', 'AI_VERIFIED', 'REJECTED', 'DISBURSEMENT_REQUESTED', 'DISBURSED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"milestone\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"milestone\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.community.legalDocumentUrl",
+    "label": "Add column \"legalDocumentUrl\" to \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "legalDocumentUrl",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"legalDocumentUrl\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "legalDocumentUrl"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"legalDocumentUrl\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ADD COLUMN \"legalDocumentUrl\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"legalDocumentUrl\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "legalDocumentUrl"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.community.registrationNumber",
+    "label": "Add column \"registrationNumber\" to \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "registrationNumber",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"registrationNumber\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "registrationNumber"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"registrationNumber\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ADD COLUMN \"registrationNumber\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"registrationNumber\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "registrationNumber"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.category",
+    "label": "Add column \"category\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "category",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"category\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "category"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"category\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"category\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"category\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "category"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data_migration.backfill-campaign-category",
+    "label": "Data transform: backfill-campaign-category",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [
+      {
+        "description": "Check backfill-campaign-category has work to do",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"campaign\" WHERE \"category\" IS NULL) AS ok",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "Run backfill-campaign-category",
+        "sql": "UPDATE \"public\".\"campaign\" SET \"category\" = 'DONASI_UMUM' WHERE \"category\" IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "Verify backfill-campaign-category resolved all violations",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"campaign\" WHERE \"category\" IS NULL) AS ok",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.campaign.category",
+    "label": "Set NOT NULL on \"campaign\".\"category\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "category",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"category\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "category"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"category\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"campaign\" WHERE \"category\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"category\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ALTER COLUMN \"category\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"category\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "category",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.community.inviteCode",
+    "label": "Add column \"inviteCode\" to \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "inviteCode",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"inviteCode\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "inviteCode"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"inviteCode\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ADD COLUMN \"inviteCode\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"inviteCode\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "inviteCode"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data_migration.backfill-community-inviteCode",
+    "label": "Data transform: backfill-community-inviteCode",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [
+      {
+        "description": "Check backfill-community-inviteCode has work to do",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"community\" WHERE \"inviteCode\" IS NULL) AS ok",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "Run backfill-community-inviteCode",
+        "sql": "UPDATE \"public\".\"community\" SET \"inviteCode\" = upper(substr(md5(random()::text), 1, 7)) WHERE \"inviteCode\" IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "Verify backfill-community-inviteCode resolved all violations",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"community\" WHERE \"inviteCode\" IS NULL) AS ok",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.community.inviteCode",
+    "label": "Set NOT NULL on \"community\".\"inviteCode\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "inviteCode",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"inviteCode\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "inviteCode"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"inviteCode\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"community\" WHERE \"inviteCode\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"inviteCode\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ALTER COLUMN \"inviteCode\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"inviteCode\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "community",
+          "inviteCode",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.campaign.campaign_category_check_e13ef3a7",
+    "label": "Add check constraint \"campaign_category_check_e13ef3a7\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "campaign_category_check_e13ef3a7",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaign_category_check_e13ef3a7\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_category_check_e13ef3a7",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"campaign_category_check_e13ef3a7\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD CONSTRAINT \"campaign_category_check_e13ef3a7\" CHECK (\"category\" IN ('ZAKAT', 'DONASI_UMUM', 'WAKAF', 'BENCANA'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaign_category_check_e13ef3a7\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_category_check_e13ef3a7",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.campaign.campaign_source_check_f0d75fbf",
+    "label": "Add check constraint \"campaign_source_check_f0d75fbf\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "campaign_source_check_f0d75fbf",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaign_source_check_f0d75fbf\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_f0d75fbf",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"campaign_source_check_f0d75fbf\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD CONSTRAINT \"campaign_source_check_f0d75fbf\" CHECK (\"source\" IN ('AI_MOCK', 'MANUAL'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaign_source_check_f0d75fbf\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_f0d75fbf",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.community.community_inviteCode_key",
+    "label": "Add unique constraint on \"community\" (inviteCode)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "community_inviteCode_key",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"community_inviteCode_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_inviteCode_key",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"community_inviteCode_key\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ADD CONSTRAINT \"community_inviteCode_key\" UNIQUE (\"inviteCode\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"community_inviteCode_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_inviteCode_key",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.communityMember.communityMember_userId_communityId_key",
+    "label": "Add unique constraint on \"communityMember\" (userId, communityId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "communityMember_userId_communityId_key",
+        "table": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"communityMember_userId_communityId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_userId_communityId_key",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"communityMember_userId_communityId_key\"",
+        "sql": "ALTER TABLE \"public\".\"communityMember\" ADD CONSTRAINT \"communityMember_userId_communityId_key\" UNIQUE (\"userId\", \"communityId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"communityMember_userId_communityId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_userId_communityId_key",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.communityMember.communityMember_communityId_idx_e2c72225",
+    "label": "Create index \"communityMember_communityId_idx_e2c72225\" on \"communityMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "communityMember_communityId_idx_e2c72225",
+        "table": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"communityMember_communityId_idx_e2c72225\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember_communityId_idx_e2c72225\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"communityMember_communityId_idx_e2c72225\"",
+        "sql": "CREATE INDEX \"communityMember_communityId_idx_e2c72225\" ON \"public\".\"communityMember\" (\"communityId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"communityMember_communityId_idx_e2c72225\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember_communityId_idx_e2c72225\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.communityMember.communityMember_userId_idx_a489d58a",
+    "label": "Create index \"communityMember_userId_idx_a489d58a\" on \"communityMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "communityMember_userId_idx_a489d58a",
+        "table": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"communityMember_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"communityMember_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"communityMember_userId_idx_a489d58a\" ON \"public\".\"communityMember\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"communityMember_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"communityMember_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.milestone.milestone_campaignId_idx_3aacd648",
+    "label": "Create index \"milestone_campaignId_idx_3aacd648\" on \"milestone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "milestone_campaignId_idx_3aacd648",
+        "table": "milestone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"milestone_campaignId_idx_3aacd648\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"milestone_campaignId_idx_3aacd648\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"milestone_campaignId_idx_3aacd648\"",
+        "sql": "CREATE INDEX \"milestone_campaignId_idx_3aacd648\" ON \"public\".\"milestone\" (\"campaignId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"milestone_campaignId_idx_3aacd648\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"milestone_campaignId_idx_3aacd648\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.communityMember.communityMember_userId_fkey",
+    "label": "Add foreign key \"communityMember_userId_fkey\" on \"communityMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "communityMember_userId_fkey",
+        "table": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"communityMember_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_userId_fkey",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"communityMember_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"communityMember\"\nADD CONSTRAINT \"communityMember_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"communityMember_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_userId_fkey",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.communityMember.communityMember_communityId_fkey",
+    "label": "Add foreign key \"communityMember_communityId_fkey\" on \"communityMember\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "communityMember_communityId_fkey",
+        "table": "communityMember"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"communityMember_communityId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_communityId_fkey",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"communityMember_communityId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"communityMember\"\nADD CONSTRAINT \"communityMember_communityId_fkey\"\nFOREIGN KEY (\"communityId\")\nREFERENCES \"public\".\"community\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"communityMember_communityId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "communityMember_communityId_fkey",
+          "public",
+          "\"public\".\"communityMember\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.milestone.milestone_campaignId_fkey",
+    "label": "Add foreign key \"milestone_campaignId_fkey\" on \"milestone\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "milestone_campaignId_fkey",
+        "table": "milestone"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"milestone_campaignId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "milestone_campaignId_fkey",
+          "public",
+          "\"public\".\"milestone\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"milestone_campaignId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"milestone\"\nADD CONSTRAINT \"milestone_campaignId_fkey\"\nFOREIGN KEY (\"campaignId\")\nREFERENCES \"public\".\"campaign\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"milestone_campaignId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "milestone_campaignId_fkey",
+          "public",
+          "\"public\".\"milestone\""
+        ]
+      }
+    ]
+  }
+]

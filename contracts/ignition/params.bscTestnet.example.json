@@ -1,0 +1,8 @@
+{
+  "MizanFundingVaultModule": {
+    "campaignManager": "0x49FcE4Fc03F91bEB1f04f7D3cD89C5DD856A380e",
+    "pauser": "0x49FcE4Fc03F91bEB1f04f7D3cD89C5DD856A380e",
+    "verifier": "0x49FcE4Fc03F91bEB1f04f7D3cD89C5DD856A380e",
+    "disburser": "0x49FcE4Fc03F91bEB1f04f7D3cD89C5DD856A380e"
+  }
+}

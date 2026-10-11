@@ -1,0 +1,1199 @@
+[
+  {
+    "id": "table.campaignPayment",
+    "label": "Create table \"campaignPayment\"",
+    "summary": "Creates table \"campaignPayment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"campaignPayment\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"campaignPayment\"",
+        "sql": "CREATE TABLE \"public\".\"campaignPayment\" (\n  \"amountWei\" text NOT NULL,\n  \"campaignId\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"donorId\" int4 NOT NULL,\n  \"donorWallet\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"idempotencyKey\" text NOT NULL,\n  \"mode\" text DEFAULT 'MOCK' NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"transactionHash\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"campaignPayment_mode_check_7b45e9f3\" CHECK (\"mode\" IN ('MOCK', 'ONCHAIN')),\n  CONSTRAINT \"campaignPayment_status_check_1439faa3\" CHECK (\"status\" IN ('PENDING', 'CONFIRMED', 'FAILED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"campaignPayment\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.community",
+    "label": "Create table \"community\"",
+    "summary": "Creates table \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"community\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"community\"",
+        "sql": "CREATE TABLE \"public\".\"community\" (\n  \"chainType\" text DEFAULT 'BSC_TESTNET' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"ownerId\" int4 NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"verificationStatus\" text DEFAULT 'PENDING' NOT NULL,\n  \"walletAddress\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"community_verificationStatus_check_c2f2b79a\" CHECK (\"verificationStatus\" IN ('PENDING', 'VERIFIED', 'REJECTED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"community\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.aiConfidence",
+    "label": "Add column \"aiConfidence\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "aiConfidence",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"aiConfidence\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiConfidence"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"aiConfidence\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"aiConfidence\" float8"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"aiConfidence\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiConfidence"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.aiDraft",
+    "label": "Add column \"aiDraft\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "aiDraft",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"aiDraft\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiDraft"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"aiDraft\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"aiDraft\" json"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"aiDraft\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiDraft"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.aiReference",
+    "label": "Add column \"aiReference\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "aiReference",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"aiReference\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiReference"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"aiReference\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"aiReference\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"aiReference\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "aiReference"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.approvedAt",
+    "label": "Add column \"approvedAt\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "approvedAt",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"approvedAt\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "approvedAt"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"approvedAt\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"approvedAt\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"approvedAt\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "approvedAt"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.approvedById",
+    "label": "Add column \"approvedById\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "approvedById",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"approvedById\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "approvedById"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"approvedById\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"approvedById\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"approvedById\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "approvedById"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.communityId",
+    "label": "Add column \"communityId\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "communityId",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"communityId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "communityId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"communityId\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"communityId\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"communityId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "communityId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.contractCampaignId",
+    "label": "Add column \"contractCampaignId\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "contractCampaignId",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"contractCampaignId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "contractCampaignId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"contractCampaignId\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"contractCampaignId\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"contractCampaignId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "contractCampaignId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.contractTransactionHash",
+    "label": "Add column \"contractTransactionHash\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "contractTransactionHash",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"contractTransactionHash\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "contractTransactionHash"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"contractTransactionHash\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"contractTransactionHash\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"contractTransactionHash\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "contractTransactionHash"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.recipientWallet",
+    "label": "Add column \"recipientWallet\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "recipientWallet",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"recipientWallet\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "recipientWallet"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"recipientWallet\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"recipientWallet\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"recipientWallet\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "recipientWallet"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.rejectionReason",
+    "label": "Add column \"rejectionReason\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "rejectionReason",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"rejectionReason\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "rejectionReason"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"rejectionReason\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"rejectionReason\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"rejectionReason\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "rejectionReason"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.reviewStatus",
+    "label": "Add column \"reviewStatus\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "reviewStatus",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"reviewStatus\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "reviewStatus"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"reviewStatus\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"reviewStatus\" text DEFAULT 'AI_DRAFT' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"reviewStatus\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "reviewStatus"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.source",
+    "label": "Add column \"source\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "source",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"source\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "source"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"source\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"source\" text DEFAULT 'AI_MOCK' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"source\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "source"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.campaign.targetAmountWei",
+    "label": "Add column \"targetAmountWei\" to \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "targetAmountWei",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"targetAmountWei\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "targetAmountWei"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"targetAmountWei\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD COLUMN \"targetAmountWei\" text DEFAULT '0' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"targetAmountWei\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "campaign",
+          "targetAmountWei"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.campaign.campaign_reviewStatus_check_8871a79a",
+    "label": "Add check constraint \"campaign_reviewStatus_check_8871a79a\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "campaign_reviewStatus_check_8871a79a",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaign_reviewStatus_check_8871a79a\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_reviewStatus_check_8871a79a",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"campaign_reviewStatus_check_8871a79a\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD CONSTRAINT \"campaign_reviewStatus_check_8871a79a\" CHECK (\"reviewStatus\" IN ('AI_DRAFT', 'PENDING_REVIEW', 'APPROVED', 'REJECTED'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaign_reviewStatus_check_8871a79a\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_reviewStatus_check_8871a79a",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.campaign.campaign_source_check_49f4562b",
+    "label": "Add check constraint \"campaign_source_check_49f4562b\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "campaign_source_check_49f4562b",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaign_source_check_49f4562b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_49f4562b",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"campaign_source_check_49f4562b\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\" ADD CONSTRAINT \"campaign_source_check_49f4562b\" CHECK (\"source\" IN ('AI_MOCK'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaign_source_check_49f4562b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_source_check_49f4562b",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.campaignPayment.campaignPayment_idempotencyKey_key",
+    "label": "Add unique constraint on \"campaignPayment\" (idempotencyKey)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "campaignPayment_idempotencyKey_key",
+        "table": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"campaignPayment_idempotencyKey_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_idempotencyKey_key",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"campaignPayment_idempotencyKey_key\"",
+        "sql": "ALTER TABLE \"public\".\"campaignPayment\" ADD CONSTRAINT \"campaignPayment_idempotencyKey_key\" UNIQUE (\"idempotencyKey\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"campaignPayment_idempotencyKey_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_idempotencyKey_key",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.community.community_walletAddress_chainType_key",
+    "label": "Add unique constraint on \"community\" (walletAddress, chainType)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "community_walletAddress_chainType_key",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"community_walletAddress_chainType_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_walletAddress_chainType_key",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"community_walletAddress_chainType_key\"",
+        "sql": "ALTER TABLE \"public\".\"community\" ADD CONSTRAINT \"community_walletAddress_chainType_key\" UNIQUE (\"walletAddress\", \"chainType\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"community_walletAddress_chainType_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_walletAddress_chainType_key",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.campaign.campaign_approvedById_idx_01ef8410",
+    "label": "Create index \"campaign_approvedById_idx_01ef8410\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "campaign_approvedById_idx_01ef8410",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"campaign_approvedById_idx_01ef8410\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaign_approvedById_idx_01ef8410\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"campaign_approvedById_idx_01ef8410\"",
+        "sql": "CREATE INDEX \"campaign_approvedById_idx_01ef8410\" ON \"public\".\"campaign\" (\"approvedById\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"campaign_approvedById_idx_01ef8410\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaign_approvedById_idx_01ef8410\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.campaign.campaign_communityId_idx_e2c72225",
+    "label": "Create index \"campaign_communityId_idx_e2c72225\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "campaign_communityId_idx_e2c72225",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"campaign_communityId_idx_e2c72225\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaign_communityId_idx_e2c72225\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"campaign_communityId_idx_e2c72225\"",
+        "sql": "CREATE INDEX \"campaign_communityId_idx_e2c72225\" ON \"public\".\"campaign\" (\"communityId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"campaign_communityId_idx_e2c72225\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaign_communityId_idx_e2c72225\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.campaignPayment.campaignPayment_campaignId_idx_3aacd648",
+    "label": "Create index \"campaignPayment_campaignId_idx_3aacd648\" on \"campaignPayment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "campaignPayment_campaignId_idx_3aacd648",
+        "table": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"campaignPayment_campaignId_idx_3aacd648\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment_campaignId_idx_3aacd648\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"campaignPayment_campaignId_idx_3aacd648\"",
+        "sql": "CREATE INDEX \"campaignPayment_campaignId_idx_3aacd648\" ON \"public\".\"campaignPayment\" (\"campaignId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"campaignPayment_campaignId_idx_3aacd648\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment_campaignId_idx_3aacd648\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.campaignPayment.campaignPayment_donorId_idx_e0e8e1e7",
+    "label": "Create index \"campaignPayment_donorId_idx_e0e8e1e7\" on \"campaignPayment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "campaignPayment_donorId_idx_e0e8e1e7",
+        "table": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"campaignPayment_donorId_idx_e0e8e1e7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment_donorId_idx_e0e8e1e7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"campaignPayment_donorId_idx_e0e8e1e7\"",
+        "sql": "CREATE INDEX \"campaignPayment_donorId_idx_e0e8e1e7\" ON \"public\".\"campaignPayment\" (\"donorId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"campaignPayment_donorId_idx_e0e8e1e7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"campaignPayment_donorId_idx_e0e8e1e7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.community.community_ownerId_idx_e2d0c1ef",
+    "label": "Create index \"community_ownerId_idx_e2d0c1ef\" on \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "community_ownerId_idx_e2d0c1ef",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"community_ownerId_idx_e2d0c1ef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"community_ownerId_idx_e2d0c1ef\"",
+        "sql": "CREATE INDEX \"community_ownerId_idx_e2d0c1ef\" ON \"public\".\"community\" (\"ownerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"community_ownerId_idx_e2d0c1ef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"community_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.campaign.campaign_approvedById_fkey",
+    "label": "Add foreign key \"campaign_approvedById_fkey\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "campaign_approvedById_fkey",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"campaign_approvedById_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_approvedById_fkey",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"campaign_approvedById_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\"\nADD CONSTRAINT \"campaign_approvedById_fkey\"\nFOREIGN KEY (\"approvedById\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"campaign_approvedById_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_approvedById_fkey",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.campaignPayment.campaignPayment_campaignId_fkey",
+    "label": "Add foreign key \"campaignPayment_campaignId_fkey\" on \"campaignPayment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "campaignPayment_campaignId_fkey",
+        "table": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"campaignPayment_campaignId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_campaignId_fkey",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"campaignPayment_campaignId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"campaignPayment\"\nADD CONSTRAINT \"campaignPayment_campaignId_fkey\"\nFOREIGN KEY (\"campaignId\")\nREFERENCES \"public\".\"campaign\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"campaignPayment_campaignId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_campaignId_fkey",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.campaignPayment.campaignPayment_donorId_fkey",
+    "label": "Add foreign key \"campaignPayment_donorId_fkey\" on \"campaignPayment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "campaignPayment_donorId_fkey",
+        "table": "campaignPayment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"campaignPayment_donorId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_donorId_fkey",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"campaignPayment_donorId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"campaignPayment\"\nADD CONSTRAINT \"campaignPayment_donorId_fkey\"\nFOREIGN KEY (\"donorId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"campaignPayment_donorId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaignPayment_donorId_fkey",
+          "public",
+          "\"public\".\"campaignPayment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.community.community_ownerId_fkey",
+    "label": "Add foreign key \"community_ownerId_fkey\" on \"community\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "community_ownerId_fkey",
+        "table": "community"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"community_ownerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_ownerId_fkey",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"community_ownerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"community\"\nADD CONSTRAINT \"community_ownerId_fkey\"\nFOREIGN KEY (\"ownerId\")\nREFERENCES \"public\".\"user\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"community_ownerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "community_ownerId_fkey",
+          "public",
+          "\"public\".\"community\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.campaign.campaign_communityId_fkey",
+    "label": "Add foreign key \"campaign_communityId_fkey\" on \"campaign\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "campaign_communityId_fkey",
+        "table": "campaign"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"campaign_communityId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_communityId_fkey",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"campaign_communityId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"campaign\"\nADD CONSTRAINT \"campaign_communityId_fkey\"\nFOREIGN KEY (\"communityId\")\nREFERENCES \"public\".\"community\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"campaign_communityId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "campaign_communityId_fkey",
+          "public",
+          "\"public\".\"campaign\""
+        ]
+      }
+    ]
+  }
+]

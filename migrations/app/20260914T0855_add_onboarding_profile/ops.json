@@ -1,0 +1,464 @@
+[
+  {
+    "id": "column.public.user.dataConsent",
+    "label": "Add column \"dataConsent\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dataConsent",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dataConsent\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsent"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"dataConsent\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"dataConsent\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dataConsent\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsent"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.dataConsentAt",
+    "label": "Add column \"dataConsentAt\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dataConsentAt",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dataConsentAt\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsentAt"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"dataConsentAt\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"dataConsentAt\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dataConsentAt\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsentAt"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.dataConsentVersion",
+    "label": "Add column \"dataConsentVersion\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dataConsentVersion",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dataConsentVersion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsentVersion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"dataConsentVersion\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"dataConsentVersion\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dataConsentVersion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "dataConsentVersion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.domicile",
+    "label": "Add column \"domicile\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "domicile",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"domicile\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "domicile"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"domicile\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"domicile\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"domicile\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "domicile"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.onboardingCompletedAt",
+    "label": "Add column \"onboardingCompletedAt\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "onboardingCompletedAt",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"onboardingCompletedAt\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "onboardingCompletedAt"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"onboardingCompletedAt\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"onboardingCompletedAt\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"onboardingCompletedAt\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "onboardingCompletedAt"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.referralSource",
+    "label": "Add column \"referralSource\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "referralSource",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"referralSource\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "referralSource"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"referralSource\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"referralSource\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"referralSource\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "referralSource"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.referralSourceOther",
+    "label": "Add column \"referralSourceOther\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "referralSourceOther",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"referralSourceOther\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "referralSourceOther"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"referralSourceOther\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"referralSourceOther\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"referralSourceOther\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "referralSourceOther"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.userType",
+    "label": "Add column \"userType\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "userType",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"userType\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "userType"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"userType\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"userType\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"userType\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "userType"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.whatsappNotificationConsent",
+    "label": "Add column \"whatsappNotificationConsent\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "whatsappNotificationConsent",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"whatsappNotificationConsent\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "whatsappNotificationConsent"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"whatsappNotificationConsent\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"whatsappNotificationConsent\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"whatsappNotificationConsent\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "whatsappNotificationConsent"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.whatsappNumber",
+    "label": "Add column \"whatsappNumber\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "whatsappNumber",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"whatsappNumber\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "whatsappNumber"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"whatsappNumber\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"whatsappNumber\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"whatsappNumber\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "whatsappNumber"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_username_key",
+    "label": "Add unique constraint on \"user\" (username)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_username_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_username_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_username_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_username_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_username_key\" UNIQUE (\"username\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_username_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_username_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  }
+]

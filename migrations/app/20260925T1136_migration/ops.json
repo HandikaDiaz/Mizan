@@ -1,0 +1,212 @@
+[
+  {
+    "id": "dropCheckConstraint.analysis.analysis_disasterType_check_77cea590",
+    "label": "Drop check constraint \"analysis_disasterType_check_77cea590\" on \"analysis\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "analysis_disasterType_check_77cea590",
+        "table": "analysis"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"analysis_disasterType_check_77cea590\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "analysis_disasterType_check_77cea590",
+          "public",
+          "\"public\".\"analysis\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"analysis_disasterType_check_77cea590\"",
+        "sql": "ALTER TABLE \"public\".\"analysis\" DROP CONSTRAINT \"analysis_disasterType_check_77cea590\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"analysis_disasterType_check_77cea590\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "analysis_disasterType_check_77cea590",
+          "public",
+          "\"public\".\"analysis\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.disasterEvent.disasterEvent_disasterType_check_77cea590",
+    "label": "Drop check constraint \"disasterEvent_disasterType_check_77cea590\" on \"disasterEvent\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "disasterEvent_disasterType_check_77cea590",
+        "table": "disasterEvent"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"disasterEvent_disasterType_check_77cea590\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "disasterEvent_disasterType_check_77cea590",
+          "public",
+          "\"public\".\"disasterEvent\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"disasterEvent_disasterType_check_77cea590\"",
+        "sql": "ALTER TABLE \"public\".\"disasterEvent\" DROP CONSTRAINT \"disasterEvent_disasterType_check_77cea590\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"disasterEvent_disasterType_check_77cea590\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "disasterEvent_disasterType_check_77cea590",
+          "public",
+          "\"public\".\"disasterEvent\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.rawCapture.campaignCheckedAt",
+    "label": "Add column \"campaignCheckedAt\" to \"rawCapture\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "campaignCheckedAt",
+        "table": "rawCapture"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"campaignCheckedAt\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "rawCapture",
+          "campaignCheckedAt"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"campaignCheckedAt\"",
+        "sql": "ALTER TABLE \"public\".\"rawCapture\" ADD COLUMN \"campaignCheckedAt\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"campaignCheckedAt\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "rawCapture",
+          "campaignCheckedAt"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.analysis.analysis_disasterType_check_0ba89e00",
+    "label": "Add check constraint \"analysis_disasterType_check_0ba89e00\" on \"analysis\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "analysis_disasterType_check_0ba89e00",
+        "table": "analysis"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"analysis_disasterType_check_0ba89e00\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "analysis_disasterType_check_0ba89e00",
+          "public",
+          "\"public\".\"analysis\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"analysis_disasterType_check_0ba89e00\"",
+        "sql": "ALTER TABLE \"public\".\"analysis\" ADD CONSTRAINT \"analysis_disasterType_check_0ba89e00\" CHECK (\"disasterType\" IN ('GEMPA_BUMI', 'BANJIR', 'TANAH_LONGSOR', 'KARHUTLA', 'TSUNAMI', 'ERUPSI_GUNUNG_API', 'KEKERINGAN', 'ANGIN_PUTING_BELIUNG', 'LAINNYA'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"analysis_disasterType_check_0ba89e00\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "analysis_disasterType_check_0ba89e00",
+          "public",
+          "\"public\".\"analysis\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.disasterEvent.disasterEvent_disasterType_check_0ba89e00",
+    "label": "Add check constraint \"disasterEvent_disasterType_check_0ba89e00\" on \"disasterEvent\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "disasterEvent_disasterType_check_0ba89e00",
+        "table": "disasterEvent"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"disasterEvent_disasterType_check_0ba89e00\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "disasterEvent_disasterType_check_0ba89e00",
+          "public",
+          "\"public\".\"disasterEvent\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"disasterEvent_disasterType_check_0ba89e00\"",
+        "sql": "ALTER TABLE \"public\".\"disasterEvent\" ADD CONSTRAINT \"disasterEvent_disasterType_check_0ba89e00\" CHECK (\"disasterType\" IN ('GEMPA_BUMI', 'BANJIR', 'TANAH_LONGSOR', 'KARHUTLA', 'TSUNAMI', 'ERUPSI_GUNUNG_API', 'KEKERINGAN', 'ANGIN_PUTING_BELIUNG', 'LAINNYA'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"disasterEvent_disasterType_check_0ba89e00\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "disasterEvent_disasterType_check_0ba89e00",
+          "public",
+          "\"public\".\"disasterEvent\""
+        ]
+      }
+    ]
+  }
+]

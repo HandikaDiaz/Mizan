@@ -1,0 +1,565 @@
+// use prisma-next
+
+// =================================
+// TYPES
+// =================================
+
+types {
+  Embedding3072 = pgvector.Vector(3072)
+}
+
+// =================================
+// ENUMS — Access & Roles
+// =================================
+
+enum Role {
+  BENEFACTOR  // default role for every new sign-up (donor)
+  BENEFICIARY // staff of a verified Community — creates & manages campaigns
+  ADMIN       // internal Mizan team
+}
+
+// =================================
+// AUTH & USERS
+// =================================
+
+model User {
+  id        Int     @id @default(autoincrement())
+  privyId   String  @unique
+  email     String? @unique
+  username  String? @unique
+  name      String?
+  avatarUrl String?
+  role      Role    @default(BENEFACTOR)
+  userType  String? // TODO: clarify overlap with `role` — merge into Role enum or keep as a separate free-text segment?
+  domicile  String?
+
+  whatsappNumber              String?
+  whatsappNotificationConsent Boolean @default(false)
+
+  referralSource      String?
+  referralSourceOther String?
+
+  dataConsent            Boolean            @default(false)
+  dataConsentAt          TimestamptzString?
+  dataConsentVersion     String?
+  onboardingCompletedAt  TimestamptzString?
+
+  posts                Post[]
+  wallets              UserWallet[]
+  communityMemberships CommunityMember[]
+  approvedCampaigns    Campaign[]        @relation("CampaignApprover")
+  campaignPayments     CampaignPayment[]
+  disbursementRequests DisbursementRequest[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model UserWallet {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  user          User    @relation(fields: [userId], references: [id])
+  address       String
+  chainType     String
+  walletType    String
+  privyWalletId String? @unique
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([address, chainType])
+}
+
+model Post {
+  id       Int     @id @default(autoincrement())
+  title    String
+  content  String?
+  authorId Int
+  author   User    @relation(fields: [authorId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// =================================
+// COMMUNITY (beneficiary organization)
+// =================================
+
+model Community {
+  id                 Int                          @id @default(autoincrement())
+  name               String
+  walletAddress      String                       // org treasury address — independent from any member's personal wallet
+  chainType          String                       @default("BSC_TESTNET")
+  verificationStatus CommunityVerificationStatus  @default(PENDING)
+  inviteCode         String                       @unique // shareable code so staff can request to join this Community
+
+  legalDocumentUrl   String? // e.g. SK Kemenag / akta / NIB scan, reviewed by Admin during verification
+  registrationNumber String? // NPWP / nomor izin LAZ, free-text since format varies by institution type
+  description        String?
+  logoUrl            String?
+  websiteUrl         String?
+  contactEmail       String?
+  contactPhone       String?
+  address            String?
+
+  members   CommunityMember[]
+  campaigns Campaign[]
+  disbursementRequests DisbursementRequest[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([walletAddress, chainType])
+}
+
+model CommunityMember {
+  id          Int    @id @default(autoincrement())
+  userId      Int
+  user        User   @relation(fields: [userId], references: [id])
+  communityId Int
+  community   Community @relation(fields: [communityId], references: [id])
+
+  role   CommunityMemberRole   @default(STAFF)
+  status CommunityMemberStatus @default(PENDING) // joining via invite code starts PENDING until an OWNER approves
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([userId, communityId])
+  @@index([communityId])
+}
+
+enum CommunityMemberRole {
+  OWNER // created the Community — the only role that can approve new members & edit legal/wallet info
+  STAFF
+}
+
+enum CommunityMemberStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+}
+
+enum CommunityVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+// =================================
+// CAMPAIGN & PAYMENTS
+// =================================
+
+model Campaign {
+  id            Int        @id @default(autoincrement())
+  title         String
+  organizerName String                    // free-text label, used before a verified Community is linked
+  communityId   Int?
+  community     Community? @relation(fields: [communityId], references: [id])
+
+  source       CampaignSource       @default(AI_MOCK)
+  aiDraft      Json?
+  aiReference  String? @unique
+  aiConfidence Float?
+
+  reviewStatus    CampaignReviewStatus @default(AI_DRAFT)
+  approvedById    Int?
+  approvedBy      User?                @relation("CampaignApprover", fields: [approvedById], references: [id])
+  approvedAt      TimestamptzString?
+  rejectionReason String?
+
+  status CampaignStatus @default(ACTIVE)
+
+  recipientWallet         String?
+  targetAmountWei         String @default("0")
+  raisedAmountWei         String @default("0")
+  currency                String @default("BNB")
+  donorCount              Int    @default(0)
+  contractCampaignId      String?
+  contractTransactionHash String?
+  contractAddress         String?
+  chainId                 Int?          @default(97)
+  contractVersion         String?       @default("v4")
+  onchainStatus           OnchainStatus @default(NOT_REGISTERED)
+  onchainRegisteredAt     TimestamptzString?
+  onchainRegistrationError String?
+  fundingDeadline         TimestamptzString?
+
+  // Presentation fields for the public campaign card / detail page.
+  // English column names; the UI maps them to Indonesian labels.
+  category CampaignCategory?               // campaign type, drives the list-page filter
+  image    String?                          // cover image URL/path
+  location String?                          // human-readable location label
+  summary  String?                          // short description shown on the card
+  daysLeft Int     @default(0)              // remaining days until the deadline
+
+  payments CampaignPayment[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+enum CampaignCategory {
+  ZAKAT
+  DONASI_UMUM
+  WAKAF
+  BENCANA
+}
+
+enum CampaignSource {
+  AI_MOCK // discovered by the disaster/campaign scraper agent, needs Admin approval before staff onboarding
+  MANUAL  // created directly by a verified Beneficiary through the dashboard
+}
+
+enum CampaignReviewStatus {
+  AI_DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum CampaignStatus {
+  ACTIVE
+  COMPLETED
+  CLOSED
+}
+
+enum OnchainStatus {
+  NOT_REGISTERED
+  REGISTERING
+  REGISTERED
+  FAILED
+}
+
+model CampaignPayment {
+  id              Int           @id @default(autoincrement())
+  campaignId      Int
+  campaign        Campaign      @relation(fields: [campaignId], references: [id])
+  donorId         Int
+  donor           User          @relation(fields: [donorId], references: [id])
+  donorWallet     String
+  amountWei       String
+  mode            PaymentMode   @default(MOCK)
+  status          PaymentStatus @default(PENDING)
+  transactionHash String? @unique
+  idempotencyKey  String        @unique
+  contractAddress String?
+  chainId         Int?
+  contractCampaignId String?
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([campaignId])
+  @@index([donorId])
+}
+
+enum PaymentMode {
+  MOCK
+  ONCHAIN
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model Milestone {
+  id         Int      @id @default(autoincrement())
+  campaignId Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+  order       Int
+  description String
+  amountWei   String
+
+  status MilestoneStatus @default(PENDING)
+  lockedAt TimestamptzString?
+
+  proofImageUrl      String? // uploaded receipt/photo, stored off-chain (e.g. IPFS/object storage)
+  proofNote          String? // beneficiary's own note on what the fund was used for
+  aiVerificationNote String? // AI agent's reasoning/output
+  aiConfidence       Float?
+
+  disbursementRequestedAt TimestamptzString?
+  contractMilestoneId     String?
+  evidenceHash            String?
+  disbursementTxHash      String?
+  disbursementRequests    DisbursementRequest[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([campaignId])
+  @@unique([campaignId, order])
+  @@unique([contractMilestoneId])
+}
+
+enum DisbursementRequestStatus {
+  SUBMITTED
+  AI_VERIFIED
+  MANUAL_REVIEW
+  REJECTED
+  ADMIN_APPROVED
+  CHAIN_PENDING
+  DISBURSED
+  CHAIN_FAILED
+}
+
+model DisbursementRequest {
+  id                Int                        @id @default(autoincrement())
+  milestoneId       Int
+  milestone         Milestone                  @relation(fields: [milestoneId], references: [id])
+  communityId       Int
+  community         Community                  @relation(fields: [communityId], references: [id])
+  requestedByUserId Int
+  requestedByUser   User                       @relation(fields: [requestedByUserId], references: [id])
+
+  requestedAmountWei String
+  description        String
+  region             String                     @default("Indonesia")
+  items              Json
+
+  documentStoragePath String
+  documentFileName    String
+  documentMimeType    String
+  signatureStoragePath String?
+
+  langflowDecision   String?
+  langflowConfidence Float?
+  langflowOutput     Json?
+  status             DisbursementRequestStatus @default(SUBMITTED)
+
+  idempotencyKey             String? @unique
+  activeRequestKey           String? @unique
+  approvedAmountWei          String?
+  verificationTransactionHash String?
+  transactionHash            String?
+  blockNumber                BigInt?
+  logIndex                   Int?
+  chainError                 String?
+  retryCount                 Int @default(0)
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([milestoneId])
+  @@index([communityId])
+  @@index([status])
+  @@index([requestedByUserId])
+}
+
+enum MilestoneStatus {
+  PENDING                 // not yet started
+  PROOF_SUBMITTED         // beneficiary uploaded proof, awaiting AI check
+  AI_VERIFIED             // AI approved, ready for disbursement request
+  MANUAL_REVIEW           // AI uncertain, waiting for admin review
+  REJECTED                // AI flagged, beneficiary must resubmit proof
+  ADMIN_APPROVED          // admin approved and on-chain milestone is verified
+  CHAIN_PENDING           // release transaction broadcast and awaiting a receipt
+  DISBURSED               // funds released
+  CHAIN_FAILED            // release definitively failed and can be retried
+}
+
+// =================================
+// DISASTER INTELLIGENCE (AI agent — Alpin)
+// =================================
+
+model Source {
+  id              String      @id @default(uuid())
+  name            String
+  sourceType      SourceType
+  dataFormats     DataFormats
+  baseUrlOrHandle String
+  isOfficial      Boolean     @default(false)
+  isActive        Boolean     @default(true)
+
+  rawCaptures RawCapture[]
+
+  createdAt TimestamptzString @default(now())
+
+  @@index([sourceType])
+}
+
+model Scheduler {
+  id          String   @id @default(uuid())
+
+  name        String @unique
+  jobType     String
+
+  cron        String
+
+  isActive    Boolean  @default(true)
+
+  lastRunAt     TimestamptzString?
+  lastFinishedAt TimestamptzString?
+  nextRunAt   TimestamptzString?
+
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([isActive])
+  @@index([jobType])
+}
+
+
+enum SourceType {
+  OFFICIAL // BNPB, BMKG, etc.
+  NEWS
+  SOCIAL_MEDIA
+}
+
+enum DataFormats {
+  JSON
+  RSS
+  HTML
+  OTHERS
+}
+
+model RawCapture {
+  id     String @id @default(uuid())
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+
+  url               String?
+  authorName        String?
+  authorVerified    Boolean @default(false)
+  contentText       String
+  mediaUrls         Json?
+  engagementMetrics Json?
+  publishedAt       TimestamptzString?
+  contentHash       String  @unique
+
+  analysis Analysis?
+
+  capturedAt TimestamptzString @default(now())
+  campaignCheckedAt TimestamptzString?
+
+
+  @@index([sourceId])
+  @@index([capturedAt])
+}
+
+model Analysis {
+  id           String @id @default(uuid())
+  rawCaptureId String @unique
+  rawCapture   RawCapture @relation(fields: [rawCaptureId], references: [id])
+
+  isDisaster        Boolean
+  disasterType      DisasterType?
+  confidenceScore    Float
+  extractedLocation  Json?
+
+  eventId String?
+  event   DisasterEvent? @relation(fields: [eventId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([eventId])
+}
+
+model DisasterEvent {
+  id String @id @default(uuid())
+
+  disasterType     DisasterType?
+  severityLevel    SeverityLevel?
+  title            String
+  description      String?
+  validationStatus ValidationStatus @default(UNVERIFIED)
+
+  locationName      String?
+  province          String?
+  city              String?
+  officialConfirmed Boolean @default(false)
+
+  analyses Analysis[]
+
+  firstDetectedAt TimestamptzString @default(now())
+  lastUpdatedAt   temporal.updatedAtString()
+
+  @@index([validationStatus])
+  @@index([disasterType])
+}
+
+model ScrapeJob {
+  id String @id @default(uuid())
+
+  startDate TimestamptzString
+  endDate   TimestamptzString
+  status    ScrapeJobStatus @default(PENDING)
+
+  totalSources  Int @default(0)
+  processedData Int @default(0)
+
+  startedAt    TimestamptzString?
+  completedAt  TimestamptzString?
+  errorMessage String?
+
+  createdAt TimestamptzString @default(now())
+
+  @@index([status])
+}
+
+enum SeverityLevel {
+  RENDAH
+  SEDANG
+  TINGGI
+  KRITIS
+}
+
+enum DisasterType {
+  GEMPA_BUMI
+  BANJIR
+  TANAH_LONGSOR
+  KARHUTLA
+  TSUNAMI
+  ERUPSI_GUNUNG_API
+  KEKERINGAN
+  ANGIN_PUTING_BELIUNG
+  LAINNYA
+}
+
+enum ValidationStatus {
+  UNVERIFIED
+  CORROBORATED
+  OFFICIAL_CONFIRMED
+  REJECTED
+}
+
+enum ScrapeJobStatus {
+  PENDING
+  PLANNING
+  SCRAPING
+  ANALYZING
+  COMPLETED
+  FAILED
+}
+
+// =================================
+// AUDIT / OBSERVABILITY
+// =================================
+
+model AuditLog {
+  id          Uuid     @id @default(uuid())
+  campaignId  String?  // was `panti_id` — generalized to campaign scope, confirm this mapping is correct
+  notaNumber  String?
+  totalAmount Decimal?
+  status      String?
+  reason      String?
+  embedding   Embedding3072?
+  content     String?
+  metadata    Jsonb?
+
+  createdAt TimestamptzString? @default(now())
+
+  @@map("audit_logs")
+  @@control(observed)
+  @@rls
+}
+policy_insert audit_logs_langflow {
+  target    = AuditLog
+  roles     = [anon, authenticated]
+  withCheck = "true"
+}

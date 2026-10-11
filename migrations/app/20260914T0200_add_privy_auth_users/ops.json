@@ -1,0 +1,291 @@
+[
+  {
+    "id": "alterNullability.dropNotNull.user.email",
+    "label": "Drop NOT NULL on \"user\".\"email\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "email",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"email\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "email"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop NOT NULL on \"email\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ALTER COLUMN \"email\" DROP NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"email\" is nullable",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "email",
+          "YES"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.privyId",
+    "label": "Add column \"privyId\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "privyId",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"privyId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "privyId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"privyId\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"privyId\" text NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"privyId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "privyId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.avatarUrl",
+    "label": "Add column \"avatarUrl\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "avatarUrl",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"avatarUrl\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "avatarUrl"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"avatarUrl\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"avatarUrl\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"avatarUrl\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "avatarUrl"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.user.role",
+    "label": "Add column \"role\" to \"user\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "role",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"role\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "role"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"role\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD COLUMN \"role\" text DEFAULT 'USER' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"role\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "user",
+          "role"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.user.user_privyId_key",
+    "label": "Add unique constraint on \"user\" (privyId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "user_privyId_key",
+        "table": "user"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"user_privyId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_privyId_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"user_privyId_key\"",
+        "sql": "ALTER TABLE \"public\".\"user\" ADD CONSTRAINT \"user_privyId_key\" UNIQUE (\"privyId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"user_privyId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "user_privyId_key",
+          "public",
+          "\"public\".\"user\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.userWallet",
+    "label": "Create table \"userWallet\"",
+    "summary": "Creates table \"userWallet\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "userWallet"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"userWallet\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"userWallet\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"userWallet\"",
+        "sql": "CREATE TABLE \"public\".\"userWallet\" (\n  \"id\" SERIAL NOT NULL PRIMARY KEY,\n  \"userId\" int4 NOT NULL,\n  \"address\" text NOT NULL,\n  \"chainType\" text NOT NULL,\n  \"walletType\" text NOT NULL,\n  \"privyWalletId\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  CONSTRAINT \"userWallet_privyWalletId_key\" UNIQUE (\"privyWalletId\"),\n  CONSTRAINT \"userWallet_address_chainType_key\" UNIQUE (\"address\", \"chainType\"),\n  CONSTRAINT \"userWallet_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"user\" (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"userWallet\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"userWallet\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.userWallet.userWallet_userId_idx_a489d58a",
+    "label": "Create index \"userWallet_userId_idx_a489d58a\" on \"userWallet\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "userWallet_userId_idx_a489d58a",
+        "table": "userWallet"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"userWallet_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"userWallet_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"userWallet_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"userWallet_userId_idx_a489d58a\" ON \"public\".\"userWallet\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"userWallet_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"userWallet_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  }
+]
